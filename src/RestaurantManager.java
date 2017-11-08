@@ -37,7 +37,7 @@ public class RestaurantManager {
     }
 
     public static void init() throws IOException { //Read menu from file for using.
-        FileReader file = new FileReader("data/menu.txt");
+        FileReader file = new FileReader("src/data/menu.txt");
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
         while (readLine != null) {
