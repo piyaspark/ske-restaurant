@@ -1,0 +1,9 @@
+# My restaurant menus.
+# menu;price
+Pepper pork steak;230.0
+Spaghetti Carbonara;150.0
+Rib-eye steak;450.0
+Mashed potatoes;80.0
+Salad with bacons;130.0
+Pork ribs grill;320.0
+Barbecue chicken steak;240
