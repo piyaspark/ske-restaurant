@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.*;
 
 /**
@@ -30,8 +31,14 @@ public class mySkeRestaurant {
     }
 
     public static void addToOrder(int order, int[] orders) { //Add the menu that user selected with quantity of the menu.
-        int QtyInput = getInt("Enter Quantity: ");
-        orders[order - 1] += QtyInput;
+        String QtyInput = getString("Enter Quantity: ");
+        if (isNumber(QtyInput)) {
+            int Qty = Integer.parseInt(QtyInput);
+            orders[order - 1] += Qty;
+            System.out.println("[ Added to order! ]");
+        } else {
+            System.out.println("[ Invalid choice! ]");
+        }
     }
 
     public static double computeTotal(int[] orders) { //Compute total price of every menu in orders.
@@ -43,7 +50,7 @@ public class mySkeRestaurant {
     }
 
     public static void printOrder(int[] orders, double totalPrice) { //Print orders with table format.
-        System.out.print("+------------ Menu ------------+-- Qty --+-- Price --+\n");
+        System.out.print("\n+------------ Menu ------------+-- Qty --+-- Price --+\n");
 
         for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
             if (orders[i] != 0)
@@ -51,7 +58,7 @@ public class mySkeRestaurant {
         }
         System.out.printf("+------------------------------+---------+-----------+\n");
         System.out.printf("| Total                                  | %9.2f |\n", totalPrice);
-        System.out.printf("+----------------------------------------+-----------+\n");
+        System.out.printf("+----------------------------------------+-----------+\n\n");
 
     }
 
@@ -61,7 +68,10 @@ public class mySkeRestaurant {
         if (change == 0) {
             System.out.println("[ Invalid amount(not zero) ]");
             return orders;
-        } else orders[choice - 1] += change;
+        } else {
+            orders[choice - 1] += change;
+            System.out.println("[ Your order already changed ]");
+        }
         return orders;
     }
 
@@ -76,13 +86,28 @@ public class mySkeRestaurant {
         return vat;
     }
 
-    public static void Receipt(int[] orders, double totalPrice) { //Print receipt for user's payment.
+    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) {
+        PrintStream writeFile = RestaurantManager.recordOrder();
+        writeFile.printf("Order : %d\n", orderNum);
+        for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
+            if (orders[i] != 0)
+                writeFile.printf("%-29s%3d\n", RestaurantManager.menuItem[i], orders[i], RestaurantManager.menuPrice[i] * orders[i]);
+        }
+        writeFile.printf("Total(included VAT) : %.2f\n", totalPrice + VAT);
+        writeFile.println("--------------------------------------------");
+        writeFile.println("-");
+        writeFile.close();
+    }
+
+    public static void Receipt(int[] orders, double totalPrice) { //Print receipt for user's payment with order number.
         System.out.println("\n		        # SKE Steak House #	    		\n");
+        System.out.printf("		            Order: %-3d  	    		\n", RestaurantManager.orderNum);
         printOrder(orders, totalPrice);
         double vat = VAT(totalPrice);
         System.out.printf("   VAT (included 5 percent)                %9.2f     \n", vat);
         System.out.printf("   Payment                                 %9.2f     \n", totalPrice + vat);
-
+        writeToFile(RestaurantManager.getOrderNum(), orders, totalPrice, vat);
+        for (int i = 0; i < orders.length; i++) orders[i] = 0;
     }
 
     public static void showMenu() { //Show all menu that user can select.
@@ -96,6 +121,8 @@ public class mySkeRestaurant {
         System.out.println("[p] Print order");
         System.out.println("[c] Review order and Checkout");
         System.out.println("[x] Cancel order");
+        System.out.println("[?] Show menu list again\n");
+
     }
 
     public static void runSkeRestaurant() { //Program system.
@@ -107,7 +134,6 @@ public class mySkeRestaurant {
                 case "e":
                     int choice = getInt("Enter order you want to change: ");
                     editOrder(orders, choice);
-                    System.out.println("[ Your order already changed ]");
                     inp.nextLine();
                     break;
                 case "p":
@@ -115,26 +141,30 @@ public class mySkeRestaurant {
                     printOrder(orders, totalPrice);
                     break;
                 case "c":
+
                     double payment = computeTotal(orders);
                     Receipt(orders, payment);
-                    System.out.println("\n   +================= Thank you ==================+");
-                    System.exit(1);
+                    System.out.println("\n   +================= Thank you ==================+\n");
+                    RestaurantManager.orderNum++;
+                    continue;
                 case "x":
                     int cancelOrder = getInt("Enter order you want to cancel: ");
                     cancelOrder(orders, cancelOrder);
                     System.out.println("[ Your order already canceled ]");
                     inp.nextLine();
                     break;
+                case "?":
+                    showMenu();
+                    break;
                 default:
                     if (isNumber(choose)) {
                         int order = Integer.parseInt(choose);
                         if (order <= RestaurantManager.menuItem.length) {
                             addToOrder(order, orders);
-                            System.out.println("[ Added to order! ]");
-                            inp.nextLine();
                         } else System.out.println("[ Invalid choice! ]");
+                    } else {
+                        System.out.println("[ Invalid choice! ]");
                     }
-
                     break;
             }
 
@@ -146,5 +176,6 @@ public class mySkeRestaurant {
     public static void main(String[] args) throws IOException {
         RestaurantManager.init();
         runSkeRestaurant();
+
     }
 }

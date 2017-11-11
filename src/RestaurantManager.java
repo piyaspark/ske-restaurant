@@ -11,6 +11,7 @@ public class RestaurantManager {
     public static ArrayList<String> listRead = new ArrayList<>();
     public static String[] menuItem;
     public static Double[] menuPrice;
+    public static int orderNum;
 
     public static String[] getMenuItems(int i, String lineSplit) { //Add menu items from file.
         menuItem[i] = lineSplit;
@@ -22,18 +23,39 @@ public class RestaurantManager {
         return menuPrice;
     }
 
-    public static void recordOrder() { //Record order for manager to manage.
-        String outputfile = "salesLog.txt";
+    public static PrintStream recordOrder() { //Record order for manager to manage.
+        orderNum = checkLastOrderNum();
+        String outputfile = "src/data/salesLog.txt";
         OutputStream out = null;
         try {
-            out = new FileOutputStream(outputfile);
+            out = new FileOutputStream(outputfile,true);
         } catch (FileNotFoundException ex) {
             System.out.println("Couldn't open output file " + outputfile);
-            return;
+            return null;
         }
 
         PrintStream writeFile = new PrintStream(out);
-        writeFile.close();
+        return writeFile;
+    }
+
+    public static int checkLastOrderNum() {
+        int no = 1;
+        try {
+            FileReader file = new FileReader("src/data/salesLog.txt");
+            BufferedReader reader = new BufferedReader(file);
+            String readLine = reader.readLine();
+            while () {
+                    if (readLine.equalsIgnoreCase("Order"))
+                        no += 1;
+                    if(readLine.equals("-"))
+                        break;
+            }
+        }catch (IOException e){
+            System.out.println("Damn");
+            System.exit(0);
+
+        }
+        return no;
     }
 
     public static void init() throws IOException { //Read menu from file for using.
@@ -55,5 +77,9 @@ public class RestaurantManager {
             menuItem = getMenuItems(i, lineSplit[0]);
             menuPrice = getMenuPrices(i, lineSplit[1]);
         }
+    }
+
+    public static int getOrderNum() {
+        return orderNum;
     }
 }

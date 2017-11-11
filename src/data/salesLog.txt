@@ -1,0 +1,5 @@
+# Sales log for manager to manage and check.
+# Order:
+# (Menu orders)   (quantity)
+# Total(included VAT):
+--------------------------------------------
