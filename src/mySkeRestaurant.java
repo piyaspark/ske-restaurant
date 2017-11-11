@@ -86,7 +86,7 @@ public class mySkeRestaurant {
         return vat;
     }
 
-    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) {
+    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) { //Write order to file with an order number.
         PrintStream writeFile = RestaurantManager.recordOrder();
         writeFile.printf("Order : %d\n", orderNum);
         for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
@@ -98,14 +98,14 @@ public class mySkeRestaurant {
         writeFile.close();
     }
 
-    public static void Receipt(int[] orders, double totalPrice) { //Print receipt for user's payment with order number.
+    public static void Receipt(int[] orders, double totalPrice, int orderNum) { //Print receipt for user's payment with order number.
         System.out.println("\n		        # SKE Steak House #	    		\n");
-        System.out.printf("		            Order: %-3d  	    		\n", RestaurantManager.orderNum);
+        System.out.printf("		            Order: %-3d  	    		\n", orderNum);
         printOrder(orders, totalPrice);
         double vat = VAT(totalPrice);
-        System.out.printf("   VAT (included 5 percent)                %9.2f     \n", vat);
-        System.out.printf("   Payment                                 %9.2f     \n", totalPrice + vat);
-        writeToFile(RestaurantManager.orderNum, orders, totalPrice, vat);
+        System.out.printf("   VAT (included 5 percent)                %9.2f\n", vat);
+        System.out.printf("   Payment                                 %9.2f\n", totalPrice + vat);
+        writeToFile(orderNum, orders, totalPrice, vat);
         for (int i = 0; i < orders.length; i++) orders[i] = 0;
     }
 
@@ -120,11 +120,12 @@ public class mySkeRestaurant {
         System.out.println("[p] Print order");
         System.out.println("[c] Review order and Checkout");
         System.out.println("[x] Cancel order");
+        System.out.println("[q] Exit the program");
         System.out.println("[?] Show menu list again\n");
 
     }
 
-    public static void runSkeRestaurant() { //Program system.
+    public static void runSkeRestaurant() throws IOException { //Program system.
         showMenu();
         int[] orders = new int[RestaurantManager.menuItem.length];
         while (true) {
@@ -140,11 +141,10 @@ public class mySkeRestaurant {
                     printOrder(orders, totalPrice);
                     break;
                 case "c":
-
                     double payment = computeTotal(orders);
-                    Receipt(orders, payment);
+                    int orderNum = RestaurantManager.checkLastOrderNum();
+                    Receipt(orders, payment, orderNum);
                     System.out.println("\n   +================= Thank you ==================+\n");
-                    RestaurantManager.orderNum++;
                     continue;
                 case "x":
                     int cancelOrder = getInt("Enter order you want to cancel: ");
@@ -152,6 +152,8 @@ public class mySkeRestaurant {
                     System.out.println("[ Your order already canceled ]");
                     inp.nextLine();
                     break;
+                case "q":
+                    System.exit(1);
                 case "?":
                     showMenu();
                     break;

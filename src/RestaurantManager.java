@@ -12,6 +12,7 @@ public class RestaurantManager {
     public static String[] menuItem;
     public static Double[] menuPrice;
     public static int orderNum;
+    public static String orderNumString;
 
     public static String[] getMenuItems(int i, String lineSplit) { //Add menu items from file.
         menuItem[i] = lineSplit;
@@ -32,19 +33,27 @@ public class RestaurantManager {
             System.out.println("Couldn't open output file " + outputfile);
             return null;
         }
-
         PrintStream writeFile = new PrintStream(out);
         return writeFile;
     }
 
-    public static int checkLastOrderNum() throws IOException {
+    public static int checkLastOrderNum() throws IOException { //Check the last order number and return.
         FileReader file = new FileReader("src/data/salesLog.txt");
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
         while (readLine != null) {
-            if (readLine.startsWith("Order")) orderNum += 1;
+            if (readLine.startsWith("=")) {
+                orderNumString = "0";
+            } else {
+                if (readLine.startsWith("Order")) {
+                    String[] lineSplit = readLine.trim().split(": ");
+                    orderNumString = lineSplit[1];
+                }
+            }
+            readLine = reader.readLine();
         }
-        return orderNum;
+        orderNum = Integer.parseInt(orderNumString);
+        return orderNum + 1;
     }
 
     public static void init() throws IOException { //Read menu from file for using.
@@ -67,6 +76,4 @@ public class RestaurantManager {
             menuPrice = getMenuPrices(i, lineSplit[1]);
         }
     }
-
-
 }
