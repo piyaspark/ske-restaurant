@@ -1,5 +1,0 @@
-Order : 1
-Spaghetti Carbonara               2
-Mashed potatoes                   5
-Mac'n'cheese                      6
-Total(included VAT) : 1806.00
