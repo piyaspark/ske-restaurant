@@ -24,11 +24,10 @@ public class RestaurantManager {
     }
 
     public static PrintStream recordOrder() { //Record order for manager to manage.
-        orderNum = checkLastOrderNum();
         String outputfile = "src/data/salesLog.txt";
         OutputStream out = null;
         try {
-            out = new FileOutputStream(outputfile,true);
+            out = new FileOutputStream(outputfile, true);
         } catch (FileNotFoundException ex) {
             System.out.println("Couldn't open output file " + outputfile);
             return null;
@@ -38,24 +37,14 @@ public class RestaurantManager {
         return writeFile;
     }
 
-    public static int checkLastOrderNum() {
-        int no = 1;
-        try {
-            FileReader file = new FileReader("src/data/salesLog.txt");
-            BufferedReader reader = new BufferedReader(file);
-            String readLine = reader.readLine();
-            while () {
-                    if (readLine.equalsIgnoreCase("Order"))
-                        no += 1;
-                    if(readLine.equals("-"))
-                        break;
-            }
-        }catch (IOException e){
-            System.out.println("Damn");
-            System.exit(0);
-
+    public static int checkLastOrderNum() throws IOException {
+        FileReader file = new FileReader("src/data/salesLog.txt");
+        BufferedReader reader = new BufferedReader(file);
+        String readLine = reader.readLine();
+        while (readLine != null) {
+            if (readLine.startsWith("Order")) orderNum += 1;
         }
-        return no;
+        return orderNum;
     }
 
     public static void init() throws IOException { //Read menu from file for using.
@@ -79,7 +68,5 @@ public class RestaurantManager {
         }
     }
 
-    public static int getOrderNum() {
-        return orderNum;
-    }
+
 }

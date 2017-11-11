@@ -95,7 +95,6 @@ public class mySkeRestaurant {
         }
         writeFile.printf("Total(included VAT) : %.2f\n", totalPrice + VAT);
         writeFile.println("--------------------------------------------");
-        writeFile.println("-");
         writeFile.close();
     }
 
@@ -106,7 +105,7 @@ public class mySkeRestaurant {
         double vat = VAT(totalPrice);
         System.out.printf("   VAT (included 5 percent)                %9.2f     \n", vat);
         System.out.printf("   Payment                                 %9.2f     \n", totalPrice + vat);
-        writeToFile(RestaurantManager.getOrderNum(), orders, totalPrice, vat);
+        writeToFile(RestaurantManager.orderNum, orders, totalPrice, vat);
         for (int i = 0; i < orders.length; i++) orders[i] = 0;
     }
 
