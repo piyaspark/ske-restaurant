@@ -6,5 +6,6 @@ Rib-eye steak;450.0
 Mashed potatoes;80.0
 Salad with bacons;130.0
 Grilled pork ribs;320.0
-Barbecue chicken steak;240
+Barbecue chicken steak;240.0
 Mac'n'cheese;170.0
+Filet Mignon;550.0

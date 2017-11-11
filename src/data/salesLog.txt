@@ -1,5 +1,28 @@
 # Sales log for manager to manage and check.
+# It should have format like this.
+#
 # Order:
-# (Menu orders)   (quantity)
+# (Menu orders)            (quantity)
 # Total(included VAT):
 ============================================
+Order : 1
+Rib-eye steak                  4
+Total(included VAT) : 1890.00
+--------------------------------------------
+Order : 2
+Rib-eye steak                  3
+Total(included VAT) : 1417.50
+--------------------------------------------
+Order : 3
+Salad with bacons              5
+Total(included VAT) : 682.50
+--------------------------------------------
+Order : 4
+Spaghetti Carbonara            2
+Total(included VAT) : 315.00
+--------------------------------------------
+Order : 5
+Spaghetti Carbonara            2
+Salad with bacons              4
+Total(included VAT) : 861.00
+--------------------------------------------

@@ -98,9 +98,9 @@ public class mySkeRestaurant {
         writeFile.close();
     }
 
-    public static void Receipt(int[] orders, double totalPrice, int orderNum) { //Print receipt for user's payment with order number.
+    public static void receipt(int[] orders, double totalPrice, int orderNum) { //Print receipt for user's payment with order number.
         System.out.println("\n		        # SKE Steak House #	    		\n");
-        System.out.printf("		            Order: %-3d  	    		\n", orderNum);
+        System.out.printf("		             Order: %-3d  	    		\n", orderNum);
         printOrder(orders, totalPrice);
         double vat = VAT(totalPrice);
         System.out.printf("   VAT (included 5 percent)                %9.2f\n", vat);
@@ -138,12 +138,13 @@ public class mySkeRestaurant {
                     break;
                 case "p":
                     double totalPrice = computeTotal(orders);
+                    System.out.println("\nYour current orders...");
                     printOrder(orders, totalPrice);
                     break;
                 case "c":
                     double payment = computeTotal(orders);
                     int orderNum = RestaurantManager.checkLastOrderNum();
-                    Receipt(orders, payment, orderNum);
+                    receipt(orders, payment, orderNum);
                     System.out.println("\n   +================= Thank you ==================+\n");
                     continue;
                 case "x":
@@ -153,6 +154,7 @@ public class mySkeRestaurant {
                     inp.nextLine();
                     break;
                 case "q":
+                    System.out.println("Bye!");
                     System.exit(1);
                 case "?":
                     showMenu();
