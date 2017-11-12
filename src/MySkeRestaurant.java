@@ -8,20 +8,33 @@ import java.util.*;
  * @author Piyaphol Wiengperm #6010545846
  */
 
-public class mySkeRestaurant {
-    public static Scanner inp = new Scanner(System.in);
+public class MySkeRestaurant {
+    private static Scanner inp = new Scanner(System.in);
+    private static String[] menuItems;
+    private static Double[] menuPrices;
 
-    public static String getString(String prompt) { //Return String.
+    /**
+     * @return input in string.
+     */
+    public static String getString(String prompt) {
         System.out.print(prompt);
         return inp.nextLine();
     }
 
-    public static int getInt(String prompt) { //Return Integer.
+    /**
+     * @return input in integer.
+     */
+    public static int getInt(String prompt) {
         System.out.print(prompt);
         return inp.nextInt();
     }
 
-    public static boolean isNumber(String choose) { //Check if an input is a number.
+    /**
+     * Check if an input is a number.
+     *
+     * @return boolean for condition.
+     */
+    public static boolean isNumber(String choose) {
         try {
             Integer.parseInt(choose);
             return true;
@@ -30,7 +43,10 @@ public class mySkeRestaurant {
         }
     }
 
-    public static void addToOrder(int order, int[] orders) { //Add the menu that user selected with quantity of the menu.
+    /**
+     * Add the menu that user selected with quantity of the menu.
+     */
+    public static void addToOrder(int order, int[] orders) {
         String QtyInput = getString("Enter Quantity: ");
         if (isNumber(QtyInput)) {
             int Qty = Integer.parseInt(QtyInput);
@@ -41,20 +57,28 @@ public class mySkeRestaurant {
         }
     }
 
-    public static double computeTotal(int[] orders) { //Compute total price of every menu in orders.
+    /**
+     * Compute total price of every menu in orders.
+     *
+     * @return total price in double.
+     */
+    public static double computeTotal(int[] orders) {
         double totalPrice = 0;
-        for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
-            totalPrice += orders[i] * RestaurantManager.menuPrice[i];
+        for (int i = 0; i < menuItems.length; i++) {
+            totalPrice += orders[i] * menuPrices[i];
         }
         return totalPrice;
     }
 
-    public static void printOrder(int[] orders, double totalPrice) { //Print orders with table format.
+    /**
+     * Print orders with table format.
+     */
+    public static void printOrder(int[] orders, double totalPrice) {
         System.out.print("\n+------------ Menu ------------+-- Qty --+-- Price --+\n");
 
-        for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
+        for (int i = 0; i < menuItems.length; i++) {
             if (orders[i] != 0)
-                System.out.printf("| %-29s|  %3d    | %9.2f |\n", RestaurantManager.menuItem[i], orders[i], RestaurantManager.menuPrice[i] * orders[i]);
+                System.out.printf("| %-29s|  %3d    | %9.2f |\n", menuItems[i], orders[i], menuPrices[i] * orders[i]);
         }
         System.out.printf("+------------------------------+---------+-----------+\n");
         System.out.printf("| Total                                  | %9.2f |\n", totalPrice);
@@ -62,7 +86,13 @@ public class mySkeRestaurant {
 
     }
 
-    public static int[] editOrder(int[] orders, int choice) { //Edit quantity of the order that user selected.
+    /**
+     * Edit quantity of the order that user selected.
+     * it won't do if quantity that user input is zero.
+     *
+     * @return array of orders.
+     */
+    public static int[] editOrder(int[] orders, int choice) {
         orders[choice - 1] = 0;
         int change = getInt("Enter Quantity: ");
         if (change == 0) {
@@ -75,30 +105,48 @@ public class mySkeRestaurant {
         return orders;
     }
 
-    public static int[] cancelOrder(int[] orders, int choice) { //Cancel the order that user selected.
+    /**
+     * Cancel the order that user selected.
+     *
+     * @return array of orders.
+     */
+    public static int[] cancelOrder(int[] orders, int choice) {
         orders[choice - 1] = 0;
         return orders;
     }
 
-    public static double VAT(double totalPrice) { //Calculate VAT.
+    /**
+     * Calculate VAT(Value added tax) from total.
+     *
+     * @return VAT in double.
+     */
+    public static double VAT(double totalPrice) {
         double vat = 0;
         vat += (totalPrice / 100) * 5;
         return vat;
     }
 
-    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) { //Write order to file with an order number.
+    /**
+     * Write order to file with an order number.
+     * After finished writing then close PrintStream.
+     */
+    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) {
         PrintStream writeFile = RestaurantManager.recordOrder();
         writeFile.printf("Order : %d\n", orderNum);
-        for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
+        for (int i = 0; i < menuItems.length; i++) {
             if (orders[i] != 0)
-                writeFile.printf("%-29s%3d\n", RestaurantManager.menuItem[i], orders[i], RestaurantManager.menuPrice[i] * orders[i]);
+                writeFile.printf("%-29s%3d\n", menuItems[i], orders[i], menuPrices[i] * orders[i]);
         }
         writeFile.printf("Total(included VAT) : %.2f\n", totalPrice + VAT);
         writeFile.println("--------------------------------------------");
         writeFile.close();
     }
 
-    public static void receipt(int[] orders, double totalPrice, int orderNum) { //Print receipt for user's payment with order number.
+    /**
+     * Print receipt for user's payment with order number.
+     *
+     */
+    public static void receipt(int[] orders, double totalPrice, int orderNum) {
         System.out.println("\n		        # SKE Steak House #	    		\n");
         System.out.printf("		             Order: %-3d  	    		\n", orderNum);
         printOrder(orders, totalPrice);
@@ -109,11 +157,15 @@ public class mySkeRestaurant {
         for (int i = 0; i < orders.length; i++) orders[i] = 0;
     }
 
-    public static void showMenu() { //Show all menu that user can select.
+    /**
+     * Show all menu that user can select.
+     *
+     */
+    public static void showMenu() {
         System.out.printf("\n--------Welcome to SKE Steak House---------\n");
-        for (int i = 0; i < RestaurantManager.menuItem.length; i++) {
-            System.out.printf("%d. %-30s%9.2f\n", i + 1, RestaurantManager.menuItem[i],
-                    RestaurantManager.menuPrice[i]);
+        for (int i = 0; i < menuItems.length; i++) {
+            System.out.printf("%d. %-30s%9.2f\n", i + 1, menuItems[i],
+                    menuPrices[i]);
         }
         System.out.println("\n");
         System.out.println("[e] Edit order");
@@ -125,9 +177,15 @@ public class mySkeRestaurant {
 
     }
 
-    public static void runSkeRestaurant() throws IOException { //Program system.
+    /**
+     * Program system.
+     *
+     */
+    public static void runSkeRestaurant() throws IOException {
+        menuItems = RestaurantManager.getMenuItems();
+        menuPrices = RestaurantManager.getMenuPrices();
         showMenu();
-        int[] orders = new int[RestaurantManager.menuItem.length];
+        int[] orders = new int[menuItems.length];
         while (true) {
             String choose = getString("Enter your choice: ");
             switch (choose) {
@@ -162,7 +220,7 @@ public class mySkeRestaurant {
                 default:
                     if (isNumber(choose)) {
                         int order = Integer.parseInt(choose);
-                        if (order <= RestaurantManager.menuItem.length) {
+                        if (order <= menuItems.length) {
                             addToOrder(order, orders);
                         } else System.out.println("[ Invalid choice! ]");
                     } else {

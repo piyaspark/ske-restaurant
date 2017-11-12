@@ -8,24 +8,55 @@ import java.io.*;
 import java.util.*;
 
 public class RestaurantManager {
-    public static ArrayList<String> listRead = new ArrayList<>();
-    public static String[] menuItem;
-    public static Double[] menuPrice;
+    private static String[] menuItem;
+    private static Double[] menuPrice;
+    private static String MENU_FILE = "src/data/menu.txt";
+    private static String RECORD_FILE = "src/data/salesLog.txt";
     public static int orderNum;
     public static String orderNumString;
 
-    public static String[] getMenuItems(int i, String lineSplit) { //Add menu items from file.
+
+    /**
+     * Add menu items from file to array.
+     *
+     */
+    public static void addMenuItems(int i, String lineSplit) {
         menuItem[i] = lineSplit;
+
+    }
+
+    /**
+     * Add menu prices from file to array.
+     *
+     */
+    public static void addMenuPrices(int i, String lineSplit) { //Add menu prices from file.
+        menuPrice[i] = Double.parseDouble(lineSplit);
+
+    }
+
+    /**
+     * @return array of menu items.
+     *
+     */
+    public static String[] getMenuItems() {
         return menuItem;
     }
 
-    public static Double[] getMenuPrices(int i, String lineSplit) { //Add menu prices from file.
-        menuPrice[i] = Double.parseDouble(lineSplit);
+    /**
+     * @return array of menu prices.
+     *
+     */
+    public static Double[] getMenuPrices() {
         return menuPrice;
     }
 
-    public static PrintStream recordOrder() { //Record order for manager to manage.
-        String outputfile = "src/data/salesLog.txt";
+    /**
+     * Record order for manager to manage.
+     * @return writeFile is class PrintStream.
+     *
+     */
+    public static PrintStream recordOrder() {
+        String outputfile = RECORD_FILE;
         OutputStream out = null;
         try {
             out = new FileOutputStream(outputfile, true);
@@ -37,8 +68,13 @@ public class RestaurantManager {
         return writeFile;
     }
 
+    /**
+     * Get the last order number and return it.
+     * @return  the last order number
+     *
+     */
     public static int checkLastOrderNum() throws IOException { //Check the last order number and return.
-        FileReader file = new FileReader("src/data/salesLog.txt");
+        FileReader file = new FileReader(RECORD_FILE);
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
         while (readLine != null) {
@@ -56,10 +92,15 @@ public class RestaurantManager {
         return orderNum + 1;
     }
 
+    /**
+     * Read menu from file for using.
+     *
+     */
     public static void init() throws IOException { //Read menu from file for using.
-        FileReader file = new FileReader("src/data/menu.txt");
+        FileReader file = new FileReader(MENU_FILE);
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
+        ArrayList<String> listRead = new ArrayList<>();
         while (readLine != null) {
             if (!readLine.startsWith("#")) listRead.add(readLine);
             readLine = reader.readLine();
@@ -71,9 +112,8 @@ public class RestaurantManager {
         for (int i = 0; i < listRead.size(); i++) {
             String line = listRead.get(i);
             String[] lineSplit = line.split(";");
-
-            menuItem = getMenuItems(i, lineSplit[0]);
-            menuPrice = getMenuPrices(i, lineSplit[1]);
+            addMenuItems(i, lineSplit[0]);
+            addMenuPrices(i, lineSplit[1]);
         }
     }
 }
