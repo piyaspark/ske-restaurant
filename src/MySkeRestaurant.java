@@ -127,22 +127,6 @@ public class MySkeRestaurant {
     }
 
     /**
-     * Write order to file with an order number.
-     * After finished writing then close PrintStream.
-     */
-    public static void writeToFile(int orderNum, int[] orders, double totalPrice, double VAT) {
-        PrintStream writeFile = RestaurantManager.recordOrder();
-        writeFile.printf("Order : %d\n", orderNum);
-        for (int i = 0; i < menuItems.length; i++) {
-            if (orders[i] != 0)
-                writeFile.printf("%-29s%3d\n", menuItems[i], orders[i], menuPrices[i] * orders[i]);
-        }
-        writeFile.printf("Total(included VAT) : %.2f\n", totalPrice + VAT);
-        writeFile.println("--------------------------------------------");
-        writeFile.close();
-    }
-
-    /**
      * Print receipt for user's payment with order number.
      *
      */
@@ -153,7 +137,7 @@ public class MySkeRestaurant {
         double vat = VAT(totalPrice);
         System.out.printf("   VAT (included 5 percent)                %9.2f\n", vat);
         System.out.printf("   Payment                                 %9.2f\n", totalPrice + vat);
-        writeToFile(orderNum, orders, totalPrice, vat);
+        RestaurantManager.recordOrder(orderNum, orders, totalPrice, vat);
         for (int i = 0; i < orders.length; i++) orders[i] = 0;
     }
 

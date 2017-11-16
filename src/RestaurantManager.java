@@ -12,8 +12,8 @@ public class RestaurantManager {
     private static Double[] menuPrice;
     private static String MENU_FILE = "src/data/menu.txt";
     private static String RECORD_FILE = "src/data/salesLog.txt";
-    public static int orderNum;
-    public static String orderNumString;
+    private static int orderNum;
+    private static String orderNumString;
 
 
     /**
@@ -52,20 +52,28 @@ public class RestaurantManager {
 
     /**
      * Record order for manager to manage.
-     * @return writeFile is class PrintStream.
+     * Write order to file with an order number.
+     * After finished writing then close PrintStream.
      *
      */
-    public static PrintStream recordOrder() {
+    public static void recordOrder(int orderNum, int[] orders, double totalPrice, double VAT) {
         String outputfile = RECORD_FILE;
         OutputStream out = null;
         try {
             out = new FileOutputStream(outputfile, true);
         } catch (FileNotFoundException ex) {
             System.out.println("Couldn't open output file " + outputfile);
-            return null;
+            return;
         }
         PrintStream writeFile = new PrintStream(out);
-        return writeFile;
+        writeFile.printf("Order : %d\n", orderNum);
+        for (int i = 0; i < menuItem.length; i++) {
+            if (orders[i] != 0)
+                writeFile.printf("%-29s%3d\n", menuItem[i], orders[i], menuPrice[i] * orders[i]);
+        }
+        writeFile.printf("Total(included VAT) : %.2f\n", totalPrice + VAT);
+        writeFile.println("--------------------------------------------");
+        writeFile.close();
     }
 
     /**
