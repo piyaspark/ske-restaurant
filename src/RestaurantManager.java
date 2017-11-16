@@ -29,7 +29,7 @@ public class RestaurantManager {
      * Add menu prices from file to array.
      *
      */
-    public static void addMenuPrices(int i, String lineSplit) { //Add menu prices from file.
+    public static void addMenuPrices(int i, String lineSplit) {
         menuPrice[i] = Double.parseDouble(lineSplit);
 
     }
@@ -81,7 +81,7 @@ public class RestaurantManager {
      * @return  the last order number
      *
      */
-    public static int checkLastOrderNum() throws IOException { //Check the last order number and return.
+    public static int checkLastOrderNum() throws IOException {
         FileReader file = new FileReader(RECORD_FILE);
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
@@ -104,7 +104,7 @@ public class RestaurantManager {
      * Read menu from file for using.
      *
      */
-    public static void init() throws IOException { //Read menu from file for using.
+    public static void init() throws IOException { 
         FileReader file = new FileReader(MENU_FILE);
         BufferedReader reader = new BufferedReader(file);
         String readLine = reader.readLine();
